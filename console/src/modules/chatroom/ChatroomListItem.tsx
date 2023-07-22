@@ -1,12 +1,15 @@
 import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 import {
   Box,
+  Button,
   Card,
   CardProps,
   Collapse,
   IconButton,
   Typography,
+  TextareaAutosize,
   styled,
+  useTheme,
 } from "@mui/material";
 import { useState } from "react";
 
@@ -27,7 +30,9 @@ export type ChatroomListItemProps = {
 export const ChatroomListItem: React.FC<ChatroomListItemProps> = ({
   chatroom,
 }) => {
+  const theme = useTheme()
   const [showDetails, setShowDetails] = useState(false);
+  const [editDescription, setEditDescription] = useState(false)
 
   const natureCodeName = chatroom.natureCode?.name ?? "Uncategorized";
 
@@ -51,10 +56,36 @@ export const ChatroomListItem: React.FC<ChatroomListItemProps> = ({
       </Box>
       <Collapse in={showDetails}>
         <Card sx={{ padding: 2 }}>
-          <Typography variant="body1">Description</Typography>
-          <Typography variant="body2">
-            {chatroom.description ?? "No description provided."}
-          </Typography>
+          {editDescription == false ?
+            <>
+              <Box display="flex" justifyContent="space-between">
+                <Typography variant="body1">Description</Typography>
+                <Button onClick={() => setEditDescription(true)}>Edit</Button>
+              </Box>
+              <Typography variant="body2">
+                {chatroom.description ?? "No description provided."}
+              </Typography>
+            </> :
+            <>
+              <Typography variant="body1" paddingBottom="8px">Description</Typography>
+              {/* TODO: Move textarea styles to MUI theme */}
+              <TextareaAutosize
+                style={{
+                  resize: "vertical",
+                  width: "100%",
+                  background: theme.palette.grey[900],
+                  color: theme.palette.grey[300],
+                  ...theme.typography.body2
+                }}
+                defaultValue={chatroom.description || ''}
+              />
+              <Box display="flex" justifyContent="space-between">
+                <Button onClick={() => setEditDescription(false)}>Cancel</Button>
+                <Button onClick={() => setEditDescription(true)}>Save</Button>
+              </Box>
+
+            </>
+          }
         </Card>
       </Collapse>
     </ChatroomCard>
