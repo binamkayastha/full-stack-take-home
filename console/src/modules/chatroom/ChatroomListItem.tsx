@@ -69,7 +69,10 @@ export const ChatroomListItem: React.FC<ChatroomListItemProps> = ({
             <>
               <Typography variant="body1" paddingBottom="8px">Description</Typography>
               {/* TODO: Move textarea styles to MUI theme */}
+              {/* onFocus, the textcursor is set to the end of the text box so updates can be made more easily. */}
               <TextareaAutosize
+                autoFocus={true}
+                onFocus={(e) => e.currentTarget.setSelectionRange(e.currentTarget.value.length, e.currentTarget.value.length)}
                 style={{
                   resize: "vertical",
                   width: "100%",
