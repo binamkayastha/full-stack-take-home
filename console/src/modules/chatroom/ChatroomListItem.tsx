@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 
-import { ChatroomDataFragment } from "~src/codegen/graphql";
+import { ChatroomDataFragment, ChatroomsListDocument, useEditChatroomDescriptionMutation } from "~src/codegen/graphql";
 import { ChatroomTags } from "./ChatroomTags";
 
 const ChatroomCard = styled(Card)<CardProps>(({ theme }) => ({
@@ -35,6 +35,12 @@ export const ChatroomListItem: React.FC<ChatroomListItemProps> = ({
   const [editDescription, setEditDescription] = useState(false)
 
   const natureCodeName = chatroom.natureCode?.name ?? "Uncategorized";
+
+  const [editChatroomDescription] = useEditChatroomDescriptionMutation({
+    refetchQueries: [ChatroomsListDocument]
+  })
+
+  const [newDescription, setNewDescription] = useState(chatroom.description)
 
   return (
     <ChatroomCard variant="outlined">
@@ -81,10 +87,17 @@ export const ChatroomListItem: React.FC<ChatroomListItemProps> = ({
                   ...theme.typography.body2
                 }}
                 defaultValue={chatroom.description || ''}
+                onChange={(e) => setNewDescription(e.target.value)}
               />
               <Box display="flex" justifyContent="space-between">
                 <Button onClick={() => setEditDescription(false)}>Cancel</Button>
-                <Button onClick={() => setEditDescription(true)}>Save</Button>
+                <Button onClick={() => {
+                  const variables = {
+                    id: chatroom.id, description: newDescription || ''
+                  }
+                  editChatroomDescription({ variables })
+                  setEditDescription(false)
+                }}>Save</Button>
               </Box>
 
             </>
