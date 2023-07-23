@@ -108,6 +108,14 @@ export type CreateChatroomMutationVariables = Exact<{
 
 export type CreateChatroomMutation = { __typename?: 'Mutation', createChatroom?: { __typename?: 'CreateChatroomPayload', chatroom: { __typename?: 'Chatroom', id: string, label: string, description?: string | null, callerPhoneNumber: string, resolved: boolean, natureCode?: { __typename?: 'NatureCode', id: string, name: string } | null } } | null };
 
+export type EditChatroomDescriptionMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  description: Scalars['String']['input'];
+}>;
+
+
+export type EditChatroomDescriptionMutation = { __typename?: 'Mutation', editChatroomDescription?: { __typename?: 'EditChatroomDescriptionPayload', chatroom: { __typename?: 'Chatroom', id: string, label: string, description?: string | null, callerPhoneNumber: string, resolved: boolean, natureCode?: { __typename?: 'NatureCode', id: string, name: string } | null } } | null };
+
 export type ArchivedChatroomsListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -181,6 +189,42 @@ export function useCreateChatroomMutation(baseOptions?: Apollo.MutationHookOptio
 export type CreateChatroomMutationHookResult = ReturnType<typeof useCreateChatroomMutation>;
 export type CreateChatroomMutationResult = Apollo.MutationResult<CreateChatroomMutation>;
 export type CreateChatroomMutationOptions = Apollo.BaseMutationOptions<CreateChatroomMutation, CreateChatroomMutationVariables>;
+export const EditChatroomDescriptionDocument = gql`
+    mutation EditChatroomDescription($id: ID!, $description: String!) {
+  editChatroomDescription(input: {id: $id, description: $description}) {
+    chatroom {
+      ...ChatroomData
+    }
+  }
+}
+    ${ChatroomDataFragmentDoc}`;
+export type EditChatroomDescriptionMutationFn = Apollo.MutationFunction<EditChatroomDescriptionMutation, EditChatroomDescriptionMutationVariables>;
+
+/**
+ * __useEditChatroomDescriptionMutation__
+ *
+ * To run a mutation, you first call `useEditChatroomDescriptionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEditChatroomDescriptionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [editChatroomDescriptionMutation, { data, loading, error }] = useEditChatroomDescriptionMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      description: // value for 'description'
+ *   },
+ * });
+ */
+export function useEditChatroomDescriptionMutation(baseOptions?: Apollo.MutationHookOptions<EditChatroomDescriptionMutation, EditChatroomDescriptionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<EditChatroomDescriptionMutation, EditChatroomDescriptionMutationVariables>(EditChatroomDescriptionDocument, options);
+      }
+export type EditChatroomDescriptionMutationHookResult = ReturnType<typeof useEditChatroomDescriptionMutation>;
+export type EditChatroomDescriptionMutationResult = Apollo.MutationResult<EditChatroomDescriptionMutation>;
+export type EditChatroomDescriptionMutationOptions = Apollo.BaseMutationOptions<EditChatroomDescriptionMutation, EditChatroomDescriptionMutationVariables>;
 export const ArchivedChatroomsListDocument = gql`
     query ArchivedChatroomsList {
   chatrooms(resolved: true) {
