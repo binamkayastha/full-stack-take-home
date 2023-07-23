@@ -8,7 +8,7 @@ module Mutations
     field :chatroom, Types::ChatroomType, null: false
 
     # resolver
-    def resolve(id:, description:, resolved:)
+    def resolve(id:, description:nil, resolved:nil)
       if description.nil? and resolved.nil?
         raise GraphQL::ExecutionError, "At least one field must be updated when calling EditChatroom with id %s" % id
       end

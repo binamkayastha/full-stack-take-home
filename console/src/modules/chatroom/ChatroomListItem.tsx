@@ -7,13 +7,12 @@ import {
   Collapse,
   IconButton,
   Typography,
-  TextareaAutosize,
   styled,
   useTheme,
 } from "@mui/material";
 import { useState } from "react";
 
-import { ChatroomDataFragment, ChatroomsListDocument, useEditChatroomDescriptionMutation } from "~src/codegen/graphql";
+import { ChatroomDataFragment, ChatroomsListDocument, useEditChatroomMutation } from "~src/codegen/graphql";
 import { ChatroomTags } from "./ChatroomTags";
 import { ConfirmationModal } from "./ConfirmationModal";
 import { ChatroomListItemDescription } from "./ChatroomListItemDescription";
@@ -37,12 +36,17 @@ export const ChatroomListItem: React.FC<ChatroomListItemProps> = ({
   const natureCodeName = chatroom.natureCode?.name ?? "Uncategorized";
 
   const [archiveModalOpen, setArchiveModalOpen] = useState(false)
+  const [editChatroom] = useEditChatroomMutation({
+    refetchQueries: [ChatroomsListDocument]
+  })
 
   const archiveChatroom = () => {
-    console.log("Archiving Chatroom")
-    console.log(chatroom.id)
-    console.log(chatroom.label)
     setArchiveModalOpen(false)
+    const variables = {
+      id: chatroom.id,
+      resolved: true
+    }
+    editChatroom({ variables })
   }
 
   return (
