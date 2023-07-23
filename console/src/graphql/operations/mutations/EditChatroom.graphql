@@ -1,11 +1,13 @@
-mutation EditChatroomDescription(
+mutation EditChatroom(
   $id: ID!
-  $description: String!
+  $description: String
+  $resolved: Boolean
 ) {
-  editChatroomDescription(
+  editChatroom(
     input: {
       id: $id
       description: $description
+      resolved: $resolved
     }
   ) {
     chatroom {

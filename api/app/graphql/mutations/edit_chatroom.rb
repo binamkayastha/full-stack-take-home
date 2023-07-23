@@ -1,7 +1,8 @@
 module Mutations
-  class EditChatroomDescription < BaseMutation
+  class EditChatroom < BaseMutation
     argument :id, ID, required: true
-    argument :description, String, required: true
+    argument :description, String, required: false
+    argument :resolved, Boolean, required: false
 
     # fields
     field :chatroom, Types::ChatroomType, null: false

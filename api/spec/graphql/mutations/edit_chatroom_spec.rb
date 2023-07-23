@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "Mutations::EditChatroomDescription", type: :request do
+RSpec.describe "Mutations::EditChatroom", type: :request do
   let!(:chatrooms) { create_list(:chatroom, 2) }
 
   let(:variables) do
@@ -12,14 +12,16 @@ RSpec.describe "Mutations::EditChatroomDescription", type: :request do
 
   let(:query) do
     <<~GQL
-      mutation EditChatroomDescription(
+      mutation EditChatroom(
         $id: ID!
-        $description: String!
+        $description: String
+        $resolved: Boolean
       ) {
-        editChatroomDescription(
+        editChatroom(
           input: {
             id: $id
             description: $description
+            resolved: $resolved
           }
         ) {
           chatroom {
@@ -40,6 +42,7 @@ RSpec.describe "Mutations::EditChatroomDescription", type: :request do
   context "raises error if required variables not defined" do
     let(:id) { nil }
     let(:description) { nil }
+    let(:resolved) { nil }
 
     it "returns an error" do
       expect { post '/graphql', params: { query:, variables: } }.to_not change { Chatroom.count }
@@ -57,7 +60,7 @@ RSpec.describe "Mutations::EditChatroomDescription", type: :request do
       expect { post '/graphql', params: { query:, variables: } }.to_not change { Chatroom.count }
 
       response_json = JSON.parse(response.body)
-      chatroom = Chatroom.find(response_json['data']['editChatroomDescription']['chatroom']['id'])
+      chatroom = Chatroom.find(response_json['data']['editChatroom']['chatroom']['id'])
       expect(chatroom.id).to eq(chatrooms[0]['id'])
       expect(chatroom.description).to eq("New Description")
     end

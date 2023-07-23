@@ -1,6 +1,6 @@
 import { Box, Button, Card, TextareaAutosize, TextareaAutosizeProps, Typography, styled, useTheme } from "@mui/material"
 import { useState } from "react"
-import { ChatroomDataFragment, ChatroomsListDocument, useEditChatroomDescriptionMutation } from "~src/codegen/graphql"
+import { ChatroomDataFragment, ChatroomsListDocument, useEditChatroomMutation } from "~src/codegen/graphql"
 
 
 type ChatroomListItemDescriptionProps = {
@@ -23,7 +23,7 @@ export const ChatroomListItemDescription: React.FC<ChatroomListItemDescriptionPr
 
   const [newDescription, setNewDescription] = useState(chatroom.description)
   const [editDescription, setEditDescription] = useState(false)
-  const [editChatroomDescription] = useEditChatroomDescriptionMutation({
+  const [editChatroomDescription] = useEditChatroomMutation({
     refetchQueries: [ChatroomsListDocument]
   })
 
