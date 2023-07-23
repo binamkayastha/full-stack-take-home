@@ -42,6 +42,8 @@ export const ChatroomListItem: React.FC<ChatroomListItemProps> = ({
 
   const [newDescription, setNewDescription] = useState(chatroom.description)
 
+  const [archive, setArchiveModal] = useState(false)
+
   return (
     <ChatroomCard variant="outlined">
       <Box
@@ -50,7 +52,10 @@ export const ChatroomListItem: React.FC<ChatroomListItemProps> = ({
         justifyContent="space-between"
       >
         <Box>
-          <Typography variant="h6">{chatroom.label}</Typography>
+          <Box display="flex" gap="16px">
+            <Typography variant="h6">{chatroom.label}</Typography>
+            <Button onClick={() => setArchiveModal(true)}>Archive</Button>
+          </Box>
           <ChatroomTags
             natureCode={natureCodeName}
             callerPhoneNumber={chatroom.callerPhoneNumber}
