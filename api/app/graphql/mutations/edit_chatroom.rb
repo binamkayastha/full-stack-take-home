@@ -8,10 +8,17 @@ module Mutations
     field :chatroom, Types::ChatroomType, null: false
 
     # resolver
-    def resolve(id:, description:)
-      params = { id:, description: }.compact_blank
+    def resolve(id:, description:, resolved:)
+      if description.nil? and resolved.nil?
+        raise GraphQL::ExecutionError, "At least one field must be updated when calling EditChatroom with id %s" % id
+      end
       chatroom = Chatroom.find_by(id: id)
-      chatroom.update(description: description)
+      if !description.nil?
+        chatroom.update(description: description)
+      end
+      if !resolved.nil?
+        chatroom.update(resolved: resolved)
+      end
 
       {
         chatroom: chatroom
