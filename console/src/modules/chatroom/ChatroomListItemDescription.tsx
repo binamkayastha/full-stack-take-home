@@ -1,10 +1,11 @@
 import { Box, Button, Card, TextareaAutosize, TextareaAutosizeProps, Typography, styled } from "@mui/material"
 import { useState } from "react"
-import { ArchivedChatroomsListDocument, ChatroomDataFragment, ChatroomsListDocument, useEditChatroomMutation } from "~src/codegen/graphql"
+import { ChatroomDataFragment } from "~src/codegen/graphql"
 
 
 type ChatroomListItemDescriptionProps = {
   chatroom: ChatroomDataFragment
+  updateDescription: (description: string) => void
 }
 
 const StyledTextarea = styled(TextareaAutosize)<TextareaAutosizeProps>(({ theme }) => ({
@@ -17,29 +18,21 @@ const StyledTextarea = styled(TextareaAutosize)<TextareaAutosizeProps>(({ theme 
 ))
 
 export const ChatroomListItemDescription: React.FC<ChatroomListItemDescriptionProps> = ({
-  chatroom
+  chatroom, updateDescription
 }) => {
-  const [newDescription, setNewDescription] = useState(chatroom.description)
-  const [editDescription, setEditDescription] = useState(false)
-  const [editChatroomDescription] = useEditChatroomMutation({
-    refetchQueries: [ChatroomsListDocument, ArchivedChatroomsListDocument]
-  })
 
+  const [editOpen, setEditOpen] = useState(false)
+  const [newDescription, setNewDescription] = useState(chatroom.description)
 
   return (
     <Card sx={{ padding: 2 }}>
-      {editDescription == false ?
+
+      <Box display="flex" justifyContent="space-between">
+        <Typography variant="body1">Description</Typography>
+        {!editOpen && <Button onClick={() => setEditOpen(true)}>Edit</Button>}
+      </Box>
+      {editOpen ?
         <>
-          <Box display="flex" justifyContent="space-between">
-            <Typography variant="body1">Description</Typography>
-            <Button onClick={() => setEditDescription(true)}>Edit</Button>
-          </Box>
-          <Typography variant="body2">
-            {chatroom.description?.split("\n").map((line) => <>{line}<br /></>) ?? "No description provided."}
-          </Typography>
-        </> :
-        <>
-          <Typography variant="body1" paddingBottom="8px">Description</Typography>
           {/* onFocus, the textcursor is set to the end of the text box so updates can be made more easily. */}
           <StyledTextarea
             autoFocus={true}
@@ -48,16 +41,18 @@ export const ChatroomListItemDescription: React.FC<ChatroomListItemDescriptionPr
             onChange={(e) => setNewDescription(e.target.value)}
           />
           <Box display="flex" justifyContent="space-between">
-            <Button onClick={() => setEditDescription(false)}>Cancel</Button>
+            <Button onClick={() => setEditOpen(false)}>Cancel</Button>
             <Button onClick={() => {
-              const variables = {
-                id: chatroom.id, description: newDescription || ''
-              }
-              editChatroomDescription({ variables })
-              setEditDescription(false)
+              updateDescription(newDescription || '')
+              setEditOpen(false)
             }}>Save</Button>
           </Box>
 
+        </> :
+        <>
+          <Typography variant="body2">
+            {chatroom.description?.split("\n").map((line) => <>{line}<br /></>) ?? "No description provided."}
+          </Typography>
         </>
       }
     </Card>

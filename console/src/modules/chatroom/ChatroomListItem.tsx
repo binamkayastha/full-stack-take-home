@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 
-import { ChatroomDataFragment, ChatroomsListDocument, useEditChatroomMutation } from "~src/codegen/graphql";
+import { ArchivedChatroomsListDocument, ChatroomDataFragment, ChatroomsListDocument, useEditChatroomMutation } from "~src/codegen/graphql";
 import { ChatroomTags } from "./ChatroomTags";
 import { ConfirmationModal } from "./ConfirmationModal";
 import { ChatroomListItemDescription } from "./ChatroomListItemDescription";
@@ -37,14 +37,21 @@ export const ChatroomListItem: React.FC<ChatroomListItemProps> = ({
 
   const [archiveModalOpen, setArchiveModalOpen] = useState(false)
   const [editChatroom] = useEditChatroomMutation({
-    refetchQueries: [ChatroomsListDocument]
+    refetchQueries: [ChatroomsListDocument, ArchivedChatroomsListDocument]
   })
 
   const archiveChatroom = () => {
-    setArchiveModalOpen(false)
     const variables = {
       id: chatroom.id,
       resolved: true
+    }
+    editChatroom({ variables })
+  }
+
+  const updateDescription = (newDescription: string) => {
+    const variables = {
+      id: chatroom.id,
+      description: newDescription
     }
     editChatroom({ variables })
   }
@@ -54,7 +61,10 @@ export const ChatroomListItem: React.FC<ChatroomListItemProps> = ({
       <ConfirmationModal
         open={archiveModalOpen}
         handleClose={() => setArchiveModalOpen(false)}
-        handleConfirm={() => archiveChatroom()}
+        handleConfirm={() => {
+          setArchiveModalOpen(false)
+          archiveChatroom()
+        }}
         prompt={`Are you sure you want to archive "${chatroom.label}"?`}
       />
       <ChatroomCard variant="outlined">
@@ -66,7 +76,7 @@ export const ChatroomListItem: React.FC<ChatroomListItemProps> = ({
           <Box>
             <Box display="flex" gap={theme.spacing(1)}>
               <Typography variant="h6">{chatroom.label}</Typography>
-              <Button onClick={() => setArchiveModalOpen(true)}>Archive</Button>
+              {!chatroom.resolved && <Button onClick={() => setArchiveModalOpen(true)}>Resolve</Button>}
             </Box>
             <ChatroomTags
               natureCode={natureCodeName}
@@ -78,7 +88,10 @@ export const ChatroomListItem: React.FC<ChatroomListItemProps> = ({
           </IconButton>
         </Box>
         <Collapse in={showDetails}>
-          <ChatroomListItemDescription chatroom={chatroom} />
+          <ChatroomListItemDescription
+            chatroom={chatroom}
+            updateDescription={updateDescription}
+          />
         </Collapse>
       </ChatroomCard >
     </>
