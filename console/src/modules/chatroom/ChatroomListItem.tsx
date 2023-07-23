@@ -6,6 +6,7 @@ import {
   CardProps,
   Collapse,
   IconButton,
+  Modal,
   Typography,
   TextareaAutosize,
   styled,
@@ -44,8 +45,30 @@ export const ChatroomListItem: React.FC<ChatroomListItemProps> = ({
 
   const [archive, setArchiveModal] = useState(false)
 
+  const archiveChatroom = () => {
+    setArchiveModal(false)
+  }
+
   return (
+
     <ChatroomCard variant="outlined">
+      <Modal open={archive} onClose={() => setArchiveModal(false)}>
+        <Box
+          position="absolute"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          sx={{ inset: 0 }}
+        >
+          <Card variant="outlined" sx={{ minWidth: 400, padding: 2 }}>
+            <Box paddingBottom="16px">Are you sure you want to archive "{chatroom.label}"?</Box>
+            <Box display="flex" justifyContent="space-between">
+              <Button onClick={() => setArchiveModal(false)}>Cancel</Button>
+              <Button onClick={() => archiveChatroom()}>Yes</Button>
+            </Box>
+          </Card>
+        </Box>
+      </Modal>
       <Box
         display="flex"
         alignItems="flex-start"
