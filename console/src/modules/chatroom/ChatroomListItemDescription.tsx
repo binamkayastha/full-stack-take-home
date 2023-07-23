@@ -1,4 +1,4 @@
-import { Box, Button, Card, TextareaAutosize, Typography, useTheme } from "@mui/material"
+import { Box, Button, Card, TextareaAutosize, TextareaAutosizeProps, Typography, styled, useTheme } from "@mui/material"
 import { useState } from "react"
 import { ChatroomDataFragment, ChatroomsListDocument, useEditChatroomDescriptionMutation } from "~src/codegen/graphql"
 
@@ -6,6 +6,15 @@ import { ChatroomDataFragment, ChatroomsListDocument, useEditChatroomDescription
 type ChatroomListItemDescriptionProps = {
   chatroom: ChatroomDataFragment
 }
+
+const StyledTextarea = styled(TextareaAutosize)<TextareaAutosizeProps>(({ theme }) => ({
+  resize: "vertical",
+  width: "100%",
+  background: theme.palette.grey[900],
+  color: theme.palette.grey[300],
+  ...theme.typography.body2
+}
+))
 
 export const ChatroomListItemDescription: React.FC<ChatroomListItemDescriptionProps> = ({
   chatroom
@@ -33,18 +42,10 @@ export const ChatroomListItemDescription: React.FC<ChatroomListItemDescriptionPr
         </> :
         <>
           <Typography variant="body1" paddingBottom="8px">Description</Typography>
-          {/* TODO: Move textarea styles to MUI theme */}
           {/* onFocus, the textcursor is set to the end of the text box so updates can be made more easily. */}
-          <TextareaAutosize
+          <StyledTextarea
             autoFocus={true}
             onFocus={(e) => e.currentTarget.setSelectionRange(e.currentTarget.value.length, e.currentTarget.value.length)}
-            style={{
-              resize: "vertical",
-              width: "100%",
-              background: theme.palette.grey[900],
-              color: theme.palette.grey[300],
-              ...theme.typography.body2
-            }}
             defaultValue={chatroom.description || ''}
             onChange={(e) => setNewDescription(e.target.value)}
           />
