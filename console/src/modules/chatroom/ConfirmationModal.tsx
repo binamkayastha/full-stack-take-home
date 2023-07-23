@@ -1,4 +1,4 @@
-import { Box, Button, Card, Modal } from "@mui/material";
+import { Box, Button, Card, Modal, useTheme } from "@mui/material";
 
 export type ConfirmationModalProps = {
   open: boolean;
@@ -9,6 +9,7 @@ export type ConfirmationModalProps = {
 export const ConfirmationModal: React.FC<ConfirmationModalProps> = (
   { open, prompt, handleClose, handleConfirm }
 ) => {
+  const theme = useTheme()
   return (
     <Modal open={open} onClose={handleClose}>
       <Box
@@ -19,7 +20,7 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = (
         sx={{ inset: 0 }}
       >
         <Card variant="outlined" sx={{ minWidth: 400, padding: 2 }}>
-          <Box paddingBottom="16px">
+          <Box paddingBottom={theme.spacing(1)}>
             {prompt}
           </Box>
           <Box display="flex" justifyContent="space-between">
