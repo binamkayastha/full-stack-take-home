@@ -1,4 +1,4 @@
-import { Box, Button, Card, TextareaAutosize, TextareaAutosizeProps, Typography, styled, useTheme } from "@mui/material"
+import { Box, Button, Card, TextareaAutosize, TextareaAutosizeProps, Typography, styled } from "@mui/material"
 import { useState } from "react"
 import { ArchivedChatroomsListDocument, ChatroomDataFragment, ChatroomsListDocument, useEditChatroomMutation } from "~src/codegen/graphql"
 
@@ -19,8 +19,6 @@ const StyledTextarea = styled(TextareaAutosize)<TextareaAutosizeProps>(({ theme 
 export const ChatroomListItemDescription: React.FC<ChatroomListItemDescriptionProps> = ({
   chatroom
 }) => {
-  const theme = useTheme()
-
   const [newDescription, setNewDescription] = useState(chatroom.description)
   const [editDescription, setEditDescription] = useState(false)
   const [editChatroomDescription] = useEditChatroomMutation({
@@ -37,7 +35,7 @@ export const ChatroomListItemDescription: React.FC<ChatroomListItemDescriptionPr
             <Button onClick={() => setEditDescription(true)}>Edit</Button>
           </Box>
           <Typography variant="body2">
-            {chatroom.description.split("\n").map((line) => <>{line}<br /></>) ?? "No description provided."}
+            {chatroom.description?.split("\n").map((line) => <>{line}<br /></>) ?? "No description provided."}
           </Typography>
         </> :
         <>
