@@ -37,7 +37,7 @@ export const ChatroomListItemDescription: React.FC<ChatroomListItemDescriptionPr
             <Button onClick={() => setEditDescription(true)}>Edit</Button>
           </Box>
           <Typography variant="body2">
-            {chatroom.description ?? "No description provided."}
+            {chatroom.description.split("\n").map((line) => <>{line}<br /></>) ?? "No description provided."}
           </Typography>
         </> :
         <>
