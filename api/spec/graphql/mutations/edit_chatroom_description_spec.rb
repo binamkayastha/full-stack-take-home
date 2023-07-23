@@ -61,5 +61,5 @@ RSpec.describe "Mutations::EditChatroomDescription", type: :request do
       expect(chatroom.id).to eq(chatrooms[0]['id'])
       expect(chatroom.description).to eq("New Description")
     end
-
   end
+end
