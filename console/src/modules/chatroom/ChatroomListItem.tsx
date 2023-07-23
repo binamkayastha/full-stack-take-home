@@ -89,6 +89,7 @@ export const ChatroomListItem: React.FC<ChatroomListItemProps> = ({
         </Box>
         <Collapse in={showDetails}>
           <ChatroomListItemDescription
+            key={chatroom.id}
             chatroom={chatroom}
             updateDescription={updateDescription}
           />
